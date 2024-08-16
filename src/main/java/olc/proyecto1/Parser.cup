@@ -1,0 +1,64 @@
+parser code {: 
+  public void syntax_error(Symbol s) {
+    System.err.println("Syntax error at line " + s.left + ", column " + s.right);
+  }
+:};
+
+init with {: 
+  System.out.println("Parser initialized.");
+:};
+
+terminal String IDENTIFIER, SYMBOL, OPERATION;
+terminal CONJ, OPERA, EVALUAR, CLOSE_BRACE, OPEN_BRACE, ARROW, COMMA;
+terminal NUMBER, NOT;
+
+non terminal program, statement_list, statement;
+non terminal String conjunto_def, opera_def, eval_def;
+non terminal symbol_list, operation, conjunto;
+
+start with program;
+
+program ::=
+  OPEN_BRACE statement_list CLOSE_BRACE
+  {: System.out.println("Parsing completed successfully."); :}
+  ;
+
+statement_list ::= 
+  statement 
+  | statement_list statement
+  ;
+
+statement ::=
+  conjunto_def
+  | opera_def
+  | eval_def
+  ;
+
+conjunto_def ::= 
+  CONJ IDENTIFIER ARROW symbol_list
+  {: System.out.println("Defined conjunto: " + $2); :} // $2 es IDENTIFIER
+  ;
+
+opera_def ::= 
+  OPERA IDENTIFIER ARROW operation
+  {: System.out.println("Defined operation: " + $2); :} // $2 es IDENTIFIER
+  ;
+
+eval_def ::= 
+  EVALUAR OPEN_BRACE symbol_list CLOSE_BRACE COMMA IDENTIFIER
+  {: System.out.println("Evaluating: " + $6); :} // $6 es IDENTIFIER
+  ;
+
+symbol_list ::= 
+  SYMBOL
+  | SYMBOL COMMA symbol_list
+  ;
+
+operation ::= 
+  OPERATION conjunto
+  | OPERATION conjunto operation
+  ;
+
+conjunto ::= 
+  IDENTIFIER
+  ;
