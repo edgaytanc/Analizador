@@ -1,10 +1,34 @@
-parser code {: 
+parser code {:
+  package olc.proyecto1;
+  import java_cup.runtime.Symbol;
+  import java.util.Map;
+  import java.util.HashMap;
+  import java.util.Set;
+  import java.util.HashSet;
+
   public void syntax_error(Symbol s) {
     System.err.println("Syntax error at line " + s.left + ", column " + s.right);
   }
+
+  private Map<String, Set<String>> conjuntos = new HashMap<>();
+  private Map<String, String> operaciones = new HashMap<>();
+
+  private void agregarConjunto(String nombre, Set<String> elementos) {
+    conjuntos.put(nombre, elementos);
+    System.out.println("Conjunto definido: " + nombre + " con elementos: " + elementos);
+  }
+
+  private void agregarOperacion(String nombre, String operacion) {
+    operaciones.put(nombre, operacion);
+    System.out.println("Operación definida: " + nombre + " con operación: " + operacion);
+  }
+
+  private void evaluarConjunto(Set<String> conjunto, String operacion) {
+    System.out.println("Evaluando operación " + operacion + " en conjunto: " + conjunto);
+  }
 :};
 
-init with {: 
+init with {:
   System.out.println("Parser initialized.");
 :};
 
@@ -13,8 +37,9 @@ terminal CONJ, OPERA, EVALUAR, CLOSE_BRACE, OPEN_BRACE, ARROW, COMMA;
 terminal NUMBER, NOT;
 
 non terminal program, statement_list, statement;
-non terminal String conjunto_def, opera_def, eval_def;
-non terminal symbol_list, operation, conjunto;
+non terminal conjunto_def, opera_def, eval_def;
+non terminal Set<String> symbol_list;
+non terminal String operation, conjunto;
 
 start with program;
 
@@ -36,29 +61,67 @@ statement ::=
 
 conjunto_def ::= 
   CONJ IDENTIFIER ARROW symbol_list
-  {: System.out.println("Defined conjunto: " + $2); :} // $2 es IDENTIFIER
+  {: 
+    String nombre = (String)$2;
+    Set<String> elementos = (Set<String>)$4;
+    agregarConjunto(nombre, elementos); 
+    $$ = nombre;
+  :}
   ;
 
 opera_def ::= 
   OPERA IDENTIFIER ARROW operation
-  {: System.out.println("Defined operation: " + $2); :} // $2 es IDENTIFIER
+  {: 
+    String nombre = (String)$2;
+    String operacion = (String)$4;
+    agregarOperacion(nombre, operacion); 
+    $$ = nombre;
+  :}
   ;
 
 eval_def ::= 
   EVALUAR OPEN_BRACE symbol_list CLOSE_BRACE COMMA IDENTIFIER
-  {: System.out.println("Evaluating: " + $6); :} // $6 es IDENTIFIER
+  {: 
+    String operationName = (String)$6;
+    Set<String> symbols = (Set<String>)$3;
+    if (operaciones.containsKey(operationName)) {
+      evaluarConjunto(symbols, operationName);
+    } else {
+      System.err.println("Error: Operación no definida " + operationName);
+    }
+    $$ = operationName;
+  :}
   ;
 
 symbol_list ::= 
   SYMBOL
+  {: 
+    Set<String> set = new HashSet<>();
+    set.add((String)$1);
+    $$ = set;
+  :}
   | SYMBOL COMMA symbol_list
+  {: 
+    Set<String> set = (Set<String>)$3;
+    set.add((String)$1);
+    $$ = set;
+  :}
   ;
 
 operation ::= 
   OPERATION conjunto
+  {: 
+    $$ = (String)$1 + " " + (String)$2; 
+  :}
   | OPERATION conjunto operation
+  {: 
+    $$ = (String)$1 + " " + (String)$2 + " " + (String)$3; 
+  :}
   ;
 
 conjunto ::= 
   IDENTIFIER
+  {: 
+    $$ = (String)$1; 
+  :}
   ;

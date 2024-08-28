@@ -65,12 +65,13 @@ public class Lexer implements java_cup.runtime.Scanner {
 
   private static final String ZZ_CMAP_BLOCKS_PACKED_0 =
     "\11\0\1\1\1\2\2\3\1\2\22\0\1\4\1\5"+
-    "\1\6\1\7\4\6\2\10\2\6\1\11\1\12\2\6"+
-    "\12\13\2\6\1\14\1\6\1\15\2\6\1\16\1\17"+
-    "\1\20\1\17\1\21\4\17\1\22\1\17\1\23\1\17"+
-    "\1\24\1\25\1\26\1\17\1\27\2\17\1\30\1\31"+
-    "\4\17\6\6\32\17\1\32\1\10\1\33\1\34\6\0"+
-    "\1\3\u01a2\0\2\3\326\0\u0100\3";
+    "\1\0\1\6\2\0\1\7\1\0\2\10\2\0\1\11"+
+    "\1\12\2\0\12\13\2\10\1\14\1\0\1\15\2\0"+
+    "\1\16\1\17\1\20\1\17\1\21\4\17\1\22\1\17"+
+    "\1\23\1\17\1\24\1\25\1\26\1\17\1\27\2\17"+
+    "\1\30\1\31\4\17\3\0\1\7\2\0\32\17\1\32"+
+    "\1\0\1\33\1\34\6\0\1\3\u01a2\0\2\3\326\0"+
+    "\u0100\3";
 
   private static int [] zzUnpackcmap_blocks() {
     int [] result = new int[1024];
@@ -97,10 +98,10 @@ public class Lexer implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\2\0\1\1\1\2\1\3\2\4\1\5\1\4\1\6"+
-    "\1\4\4\7\1\10\1\11\1\12\2\13\1\14\1\15"+
-    "\1\16\3\7\1\17\3\7\1\20\3\7\1\21\1\7"+
-    "\1\22";
+    "\2\0\1\1\1\2\1\3\1\4\1\3\1\5\1\6"+
+    "\1\3\1\7\1\1\4\10\1\11\1\12\1\13\2\14"+
+    "\1\15\1\16\3\10\1\17\3\10\1\20\3\10\1\21"+
+    "\1\10\1\22";
 
   private static int [] zzUnpackAction() {
     int [] result = new int[37];
@@ -128,9 +129,9 @@ public class Lexer implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\35\0\72\0\127\0\127\0\72\0\164\0\72"+
-    "\0\221\0\256\0\313\0\350\0\u0105\0\u0122\0\u013f\0\72"+
-    "\0\72\0\72\0\72\0\u015c\0\164\0\72\0\72\0\u0179"+
+    "\0\0\0\35\0\72\0\127\0\127\0\164\0\72\0\72"+
+    "\0\72\0\221\0\256\0\313\0\350\0\u0105\0\u0122\0\u013f"+
+    "\0\72\0\72\0\72\0\72\0\u015c\0\72\0\72\0\u0179"+
     "\0\u0196\0\u01b3\0\72\0\u01d0\0\u01ed\0\u020a\0\350\0\u0227"+
     "\0\u0244\0\u0261\0\350\0\u027e\0\350";
 
@@ -158,18 +159,18 @@ public class Lexer implements java_cup.runtime.Scanner {
   private static final int [] ZZ_TRANS = zzUnpackTrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\3\2\4\1\0\1\5\2\6\1\7\1\6\1\10"+
-    "\1\11\1\12\1\13\1\6\2\14\1\15\1\16\3\14"+
-    "\1\17\4\14\1\20\1\21\1\22\3\23\1\0\1\23"+
-    "\1\24\27\23\36\0\2\4\1\0\1\4\30\0\2\25"+
-    "\1\0\5\25\1\0\24\25\15\0\1\26\32\0\1\12"+
-    "\26\0\1\27\45\0\14\14\21\0\7\14\1\30\4\14"+
-    "\21\0\13\14\1\31\21\0\10\14\1\32\3\14\20\0"+
-    "\1\33\35\0\6\14\1\34\5\14\21\0\1\35\13\14"+
-    "\21\0\3\14\1\36\10\14\21\0\4\14\1\37\7\14"+
-    "\21\0\5\14\1\40\6\14\21\0\11\14\1\41\2\14"+
-    "\21\0\12\14\1\42\1\14\21\0\1\43\13\14\21\0"+
-    "\1\44\13\14\21\0\11\14\1\45\2\14\3\0";
+    "\1\3\2\4\1\0\1\5\1\3\1\6\1\7\1\10"+
+    "\1\11\1\12\1\13\1\14\1\3\2\15\1\16\1\17"+
+    "\3\15\1\20\4\15\1\21\1\22\1\23\3\24\1\0"+
+    "\1\24\1\25\27\24\36\0\2\4\1\0\1\4\30\0"+
+    "\2\6\2\0\31\6\15\0\1\26\32\0\1\13\26\0"+
+    "\1\27\45\0\14\15\21\0\7\15\1\30\4\15\21\0"+
+    "\13\15\1\31\21\0\10\15\1\32\3\15\20\0\1\33"+
+    "\35\0\6\15\1\34\5\15\21\0\1\35\13\15\21\0"+
+    "\3\15\1\36\10\15\21\0\4\15\1\37\7\15\21\0"+
+    "\5\15\1\40\6\15\21\0\11\15\1\41\2\15\21\0"+
+    "\12\15\1\42\1\15\21\0\1\43\13\15\21\0\1\44"+
+    "\13\15\21\0\11\15\1\45\2\15\3\0";
 
   private static int [] zzUnpackTrans() {
     int [] result = new int[667];
@@ -215,8 +216,8 @@ public class Lexer implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\2\0\1\11\2\1\1\11\1\1\1\11\7\1\4\11"+
-    "\2\1\2\11\3\1\1\11\12\1";
+    "\2\0\1\11\3\1\3\11\7\1\4\11\1\1\2\11"+
+    "\3\1\1\11\12\1";
 
   private static int [] zzUnpackAttribute() {
     int [] result = new int[37];
@@ -296,9 +297,6 @@ public class Lexer implements java_cup.runtime.Scanner {
   private boolean zzEOFDone;
 
   /* user code: */
-
-  //public int yyline;
-  //public int yycolumn;
 
   private void reportError(String message) {
     System.err.println("ERROR: " + message + " at line " + (yyline+1) + ", column " + yycolumn);
@@ -735,52 +733,52 @@ public class Lexer implements java_cup.runtime.Scanner {
             // fall through
           case 21: break;
           case 4:
-            { return sym(sym.SYMBOL, yytext().charAt(0));
+            { /* skip single line comments */
             }
             // fall through
           case 22: break;
           case 5:
-            { return sym(sym.COMMA);
+            { return sym(sym.SYMBOL, yytext().charAt(0));
             }
             // fall through
           case 23: break;
           case 6:
-            { return sym(sym.NUMBER, Integer.parseInt(yytext()));
+            { return sym(sym.COMMA, yytext().charAt(0));
             }
             // fall through
           case 24: break;
           case 7:
-            { return sym(sym.IDENTIFIER, yytext());
+            { return sym(sym.NUMBER, Integer.parseInt(yytext()));
             }
             // fall through
           case 25: break;
           case 8:
-            { return sym(sym.OPEN_BRACE);
+            { return sym(sym.IDENTIFIER, yytext());
             }
             // fall through
           case 26: break;
           case 9:
-            { return sym(sym.CLOSE_BRACE);
+            { return sym(sym.OPEN_BRACE, yytext().charAt(0));
             }
             // fall through
           case 27: break;
           case 10:
-            { return sym(sym.NOT);
+            { return sym(sym.CLOSE_BRACE, yytext().charAt(0));
             }
             // fall through
           case 28: break;
           case 11:
-            { /* skip multiline comments */
+            { return sym(sym.NOT, yytext().charAt(0));
             }
             // fall through
           case 29: break;
           case 12:
-            { /* skip single line comments */
+            { /* skip multiline comments */
             }
             // fall through
           case 30: break;
           case 13:
-            { return sym(sym.ARROW);
+            { return sym(sym.ARROW, yytext());
             }
             // fall through
           case 31: break;
@@ -795,17 +793,17 @@ public class Lexer implements java_cup.runtime.Scanner {
             // fall through
           case 33: break;
           case 16:
-            { return sym(sym.CONJ);
+            { return sym(sym.CONJ, yytext());
             }
             // fall through
           case 34: break;
           case 17:
-            { return sym(sym.OPERA);
+            { return sym(sym.OPERA, yytext());
             }
             // fall through
           case 35: break;
           case 18:
-            { return sym(sym.EVALUAR);
+            { return sym(sym.EVALUAR, yytext());
             }
             // fall through
           case 36: break;

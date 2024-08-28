@@ -10,9 +10,6 @@ import java_cup.runtime.Symbol;
 
 %{
 
-  //public int yyline;
-  //public int yycolumn;
-
   private void reportError(String message) {
     System.err.println("ERROR: " + message + " at line " + (yyline+1) + ", column " + yycolumn);
   }
@@ -29,41 +26,46 @@ import java_cup.runtime.Symbol;
 
 %state COMMENT
 
-CONJ       = "CONJ"
-OPERA      = "OPERA"
-EVALUAR    = "EVALUAR"
+CONJ        = "CONJ"
+OPERA       = "OPERA"
+EVALUAR     = "EVALUAR"
 CLOSE_BRACE = "}"
-OPEN_BRACE = "{"
-ARROW      = "->"
-COMMA      = ","
-NOT        = "~"
-ALPHABET   = [a-zA-Z]
-DIGIT      = [0-9]
-WHITESPACE = [ \t\n\r]+
-COMMENT_LINE = "#"[^(\n|\r)]*
+OPEN_BRACE  = "{"
+ARROW       = "->"
+COMMA       = ","
+NOT         = "~"
+SYMBOL_COLON    = ":"
+SYMBOL_SEMICOLON = ";"
+SYMBOL_OPEN_PAREN  = "\("
+SYMBOL_CLOSE_PAREN = "\)"
+ALPHABET    = [a-zA-Z]
+DIGIT       = [0-9]
+WHITESPACE  = [ \t\n\r]+
+COMMENT_LINE = "#" .*
 COMMENT_MULTILINE_START = "<!"
 COMMENT_MULTILINE_END = "!>"
-SYMBOLS    = [\!-\~]
-OPERATIONS = ["U" "&" "^" "-"]
+OPERATIONS  = ["U" "&" "^" "-"]
 
 %%
 
 <YYINITIAL> {
 
-  {CONJ}                { return sym(sym.CONJ); }
-  {OPERA}               { return sym(sym.OPERA); }
-  {EVALUAR}             { return sym(sym.EVALUAR); }
+  {CONJ}                { return sym(sym.CONJ, yytext()); }   // Asegurando que `CONJ` retorne su valor
+  {OPERA}               { return sym(sym.OPERA, yytext()); }  // Similar para `OPERA` y `EVALUAR`
+  {EVALUAR}             { return sym(sym.EVALUAR, yytext()); }
 
-  {CLOSE_BRACE}         { return sym(sym.CLOSE_BRACE); }
-  {OPEN_BRACE}          { return sym(sym.OPEN_BRACE); }
-  {ARROW}               { return sym(sym.ARROW); }
-  {COMMA}               { return sym(sym.COMMA); }
-  {NOT}                 { return sym(sym.NOT); }
+  {CLOSE_BRACE}         { return sym(sym.CLOSE_BRACE, yytext().charAt(0)); }
+  {OPEN_BRACE}          { return sym(sym.OPEN_BRACE, yytext().charAt(0)); }
+  {ARROW}               { return sym(sym.ARROW, yytext()); }
+  {COMMA}               { return sym(sym.COMMA, yytext().charAt(0)); }
+  {NOT}                 { return sym(sym.NOT, yytext().charAt(0)); }
+  {SYMBOL_COLON}        { return sym(sym.SYMBOL, yytext().charAt(0)); }
+  {SYMBOL_SEMICOLON}    { return sym(sym.SYMBOL, yytext().charAt(0)); }
+  {SYMBOL_OPEN_PAREN}   { return sym(sym.SYMBOL, yytext().charAt(0)); }
+  {SYMBOL_CLOSE_PAREN}  { return sym(sym.SYMBOL, yytext().charAt(0)); }
 
   {ALPHABET}+           { return sym(sym.IDENTIFIER, yytext()); }
   {DIGIT}+              { return sym(sym.NUMBER, Integer.parseInt(yytext())); }
-
-  {SYMBOLS}             { return sym(sym.SYMBOL, yytext().charAt(0)); }
 
   {OPERATIONS}          { return sym(sym.OPERATION, yytext().charAt(0)); }
 
@@ -84,6 +86,3 @@ OPERATIONS = ["U" "&" "^" "-"]
   .|\n|\r  { /* skip multiline comments */ }
 
 }
-
-
-
