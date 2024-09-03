@@ -5,7 +5,7 @@
 package olc.proyecto1;
 import java.io.IOException;
 import java.io.Writer;
-import javax.swing.JTextArea;
+import javax.swing.JTextArea; 
 
 public class TextAreaWriter extends Writer {
     private final JTextArea textArea;
@@ -25,7 +25,7 @@ public class TextAreaWriter extends Writer {
         // No es necesario implementar
     }
 
-    @Override
+    @Override 
     public void close() throws IOException {
         // No es necesario implementar
     }

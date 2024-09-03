@@ -14,7 +14,7 @@ import java.util.List;
 import java_cup.runtime.Symbol;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JMenuItem;
+//import javax.swing.JMenuItem;
 
 /**
  *
@@ -106,9 +106,12 @@ public class Principal extends javax.swing.JFrame {
 
         // Crear una instancia del Lexer
         Lexer lexer = new Lexer(reader);
+        
+        java_cup.runtime.SymbolFactory symbolFactory = new java_cup.runtime.DefaultSymbolFactory();
+
 
         // Crear una instancia del Parser pasando el Lexer
-        Parser parser = new Parser(lexer);
+        Parser parser = new Parser(lexer, symbolFactory);
 
         try {
             // Ejecutar el parser para iniciar el análisis sintáctico
@@ -595,7 +598,7 @@ public class Principal extends javax.swing.JFrame {
         //Limpia la consola antes de ejecutar
         txtConsola.setText("");
         analizarTokens(); //Analiza los tokens y genera el reporte
-        analizarSintactico(); // Analiza sintacticamente el codigo
+        analizarSintactico(); // Analiza sintacticamente el codigo 
 
         // obener el texto de entrada de JTextArea
 //        String inputText = txtEntrada.getText();

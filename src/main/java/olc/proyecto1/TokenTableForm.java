@@ -3,11 +3,11 @@ package olc.proyecto1;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
+import java.io.IOException; 
 
 public class TokenTableForm extends JFrame {
 
-    private JEditorPane editorPane;
+    private JEditorPane editorPane; 
 
     public TokenTableForm() {
         setTitle("Tabla de Tokens");
@@ -24,7 +24,7 @@ public class TokenTableForm extends JFrame {
         // Intentar cargar el archivo HTML
         try {
             File htmlFile = new File("tokens.html"); // Ruta al archivo tokens.html
-            editorPane.setPage(htmlFile.toURI().toURL());
+            editorPane.setPage(htmlFile.toURI().toURL()); 
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "No se pudo cargar el archivo HTML", "Error", JOptionPane.ERROR_MESSAGE);
         }

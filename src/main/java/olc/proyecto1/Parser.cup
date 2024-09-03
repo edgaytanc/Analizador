@@ -1,15 +1,14 @@
+// Importar las clases necesarias
+package olc.proyecto1; 
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java_cup.runtime.Symbol;
+
+// Sección de código del parser
 parser code {:
-  package olc.proyecto1;
-  import java_cup.runtime.Symbol;
-  import java.util.Map;
-  import java.util.HashMap;
-  import java.util.Set;
-  import java.util.HashSet;
-
-  public void syntax_error(Symbol s) {
-    System.err.println("Syntax error at line " + s.left + ", column " + s.right);
-  }
-
   private Map<String, Set<String>> conjuntos = new HashMap<>();
   private Map<String, String> operaciones = new HashMap<>();
 
@@ -26,102 +25,178 @@ parser code {:
   private void evaluarConjunto(Set<String> conjunto, String operacion) {
     System.out.println("Evaluando operación " + operacion + " en conjunto: " + conjunto);
   }
+
+  public void syntax_error(Symbol s) {
+    System.err.println("Syntax error at line " + s.left + ", column " + s.right);
+  }
+
+  public final Class getSymbolContainer() {
+    return sym.class;
+  }
 :};
 
-init with {:
-  System.out.println("Parser initialized.");
-:};
+// Definición de terminales
+terminal CONJ, OPERA, EVALUAR;
+terminal COLON, SEMICOLON, OPEN_PAREN, CLOSE_PAREN;
+terminal OPEN_BRACE, CLOSE_BRACE, ARROW, COMMA, RANGE;
+terminal IDENTIFIER, NUMBER;
+terminal AND_OP, UNION_OP, XOR_OP, DIFF_OP;
 
-terminal String IDENTIFIER, SYMBOL, OPERATION;
-terminal CONJ, OPERA, EVALUAR, CLOSE_BRACE, OPEN_BRACE, ARROW, COMMA;
-terminal NUMBER, NOT;
-
+// Definición de no terminales
 non terminal program, statement_list, statement;
 non terminal conjunto_def, opera_def, eval_def;
-non terminal Set<String> symbol_list;
-non terminal String operation, conjunto;
+non terminal symbol_list, symbol, operation, conjunto, symbol_range_or_list;
 
+// Precedencia
+precedence left COLON, SEMICOLON, OPEN_PAREN, CLOSE_PAREN;
+precedence left COMMA;
+
+// Inicio de la gramática
 start with program;
 
-program ::=
-  OPEN_BRACE statement_list CLOSE_BRACE
-  {: System.out.println("Parsing completed successfully."); :}
-  ;
+// Producciones
+program ::= OPEN_BRACE statement_list CLOSE_BRACE
+        {: System.out.println("Parsing completed successfully."); :};
 
-statement_list ::= 
-  statement 
-  | statement_list statement
-  ;
+statement_list ::= statement
+              | statement_list statement;
 
-statement ::=
-  conjunto_def
-  | opera_def
-  | eval_def
-  ;
+statement ::= conjunto_def
+         | opera_def
+         | eval_def;
 
-conjunto_def ::= 
-  CONJ IDENTIFIER ARROW symbol_list
-  {: 
-    String nombre = (String)$2;
-    Set<String> elementos = (Set<String>)$4;
-    agregarConjunto(nombre, elementos); 
-    $$ = nombre;
-  :}
-  ;
+conjunto_def ::= CONJ COLON IDENTIFIER ARROW symbol_range_or_list SEMICOLON
+            {: 
+              String nombre = (String)$3;
+              Set<String> elementos = (Set<String>)$5;
+              if (nombre != null && elementos != null) {
+                  agregarConjunto(nombre, elementos); 
+              } else {
+                  System.err.println("Error: Nombre o elementos nulos en conjunto_def.");
+              }
+            :};
 
-opera_def ::= 
-  OPERA IDENTIFIER ARROW operation
-  {: 
-    String nombre = (String)$2;
-    String operacion = (String)$4;
-    agregarOperacion(nombre, operacion); 
-    $$ = nombre;
-  :}
-  ;
+opera_def ::= OPERA COLON IDENTIFIER ARROW operation SEMICOLON
+         {:
+           String nombre = (String)$3;
+           String operacion = (String)$5;
+           if (nombre != null && operacion != null) {
+               agregarOperacion(nombre, operacion); 
+           } else {
+               System.err.println("Error: Nombre o operación nulos en opera_def.");
+           }
+         :};
 
-eval_def ::= 
-  EVALUAR OPEN_BRACE symbol_list CLOSE_BRACE COMMA IDENTIFIER
-  {: 
-    String operationName = (String)$6;
-    Set<String> symbols = (Set<String>)$3;
-    if (operaciones.containsKey(operationName)) {
-      evaluarConjunto(symbols, operationName);
-    } else {
-      System.err.println("Error: Operación no definida " + operationName);
-    }
-    $$ = operationName;
-  :}
-  ;
+eval_def ::= EVALUAR OPEN_PAREN OPEN_BRACE symbol_list CLOSE_BRACE COMMA IDENTIFIER CLOSE_PAREN SEMICOLON
+        {:
+          String operationName = (String)$7;
+          Set<String> symbols = (Set<String>)$4;
+          if (operationName != null && symbols != null) {
+              if (operaciones.containsKey(operationName)) {
+                  evaluarConjunto(symbols, operationName);
+              } else {
+                  System.err.println("Error: Operación no definida " + operationName);
+              }
+          } else {
+              System.err.println("Error: operationName o symbols nulos en eval_def.");
+          }
+        :};
 
-symbol_list ::= 
-  SYMBOL
-  {: 
-    Set<String> set = new HashSet<>();
-    set.add((String)$1);
-    $$ = set;
-  :}
-  | SYMBOL COMMA symbol_list
-  {: 
-    Set<String> set = (Set<String>)$3;
-    set.add((String)$1);
-    $$ = set;
-  :}
-  ;
+symbol_range_or_list ::= symbol_list
+           {: 
+             if ($1 != null) {
+                 RESULT = $1; 
+             } else {
+                 System.err.println("Error: symbol_list es nulo en symbol_range_or_list.");
+                 RESULT = new HashSet<>();
+             } 
+           :}
+           | symbol RANGE symbol
+           {: 
+             if ($1 != null && $3 != null) {
+                 Set<String> set = new HashSet<>();
+                 char start = ((String)$1).charAt(0);
+                 char end = ((String)$3).charAt(0);
+                 for (char c = start; c <= end; c++) {
+                     set.add(String.valueOf(c));
+                 }
+                 RESULT = set;
+             } else {
+                 System.err.println("Error: Uno de los símbolos es nulo en symbol_range_or_list.");
+                 RESULT = new HashSet<>();
+             }
+           :};
 
-operation ::= 
-  OPERATION conjunto
-  {: 
-    $$ = (String)$1 + " " + (String)$2; 
-  :}
-  | OPERATION conjunto operation
-  {: 
-    $$ = (String)$1 + " " + (String)$2 + " " + (String)$3; 
-  :}
-  ;
+symbol_list ::= symbol
+           {:
+             Set<String> set = new HashSet<>();
+             if ($1 != null) {
+                 set.add((String)$1);
+                 RESULT = set;
+             } else {
+                 System.err.println("Error: Symbol $1 is null in symbol_list production.");
+                 RESULT = new HashSet<>();
+             }
+           :}
+           | symbol COMMA symbol_list
+           {:
+             Set<String> set = (Set<String>)$3;
+             if ($1 != null) {
+                 set.add((String)$1);
+                 RESULT = set;
+             } else {
+                 System.err.println("Error: Symbol $1 is null in symbol_list production.");
+                 RESULT = set; // Preserve previous set even if $1 is null
+             }
+           :};
 
-conjunto ::= 
-  IDENTIFIER
-  {: 
-    $$ = (String)$1; 
-  :}
-  ;
+symbol ::= IDENTIFIER
+        {: 
+          RESULT = (String)$1; 
+        :}
+        | NUMBER
+        {: 
+          RESULT = String.valueOf($1); 
+        :};
+
+operation ::= AND_OP conjunto
+         {: 
+           if ($1 != null && $2 != null) {
+               RESULT = (String)$1 + " " + (String)$2; 
+           } else {
+               System.err.println("Error: One of the symbols is null in operation production.");
+               RESULT = "";
+           }
+         :}
+         | UNION_OP conjunto
+         {: 
+           if ($1 != null && $2 != null) {
+               RESULT = (String)$1 + " " + (String)$2; 
+           } else {
+               System.err.println("Error: One of the symbols is null in operation production.");
+               RESULT = "";
+           }
+         :}
+         | XOR_OP conjunto
+         {: 
+           if ($1 != null && $2 != null) {
+               RESULT = (String)$1 + " " + (String)$2; 
+           } else {
+               System.err.println("Error: One of the symbols is null in operation production.");
+               RESULT = "";
+           }
+         :}
+         | DIFF_OP conjunto
+         {: 
+           if ($1 != null && $2 != null) {
+               RESULT = (String)$1 + " " + (String)$2; 
+           } else {
+               System.err.println("Error: One of the symbols is null in operation production.");
+               RESULT = "";
+           }
+         :};
+
+conjunto ::= IDENTIFIER
+        {: 
+          RESULT = (String)$1; 
+        :};

@@ -1,16 +1,16 @@
-package olc.proyecto1;
+package olc.proyecto1; 
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import javax.swing.JEditorPane;
-import javax.swing.JScrollPane;
+import javax.swing.JScrollPane; 
 
 public class ErrorTableForm extends javax.swing.JFrame {
 
     public ErrorTableForm() {
-        initComponents();
+        initComponents(); 
     }
 
     private void initComponents() {
